@@ -1,9 +1,21 @@
-.main-bg{
-  height:300px;
+.main-bg {
+  height: 300px;
   /* src */
   /* background-image: url('./bg.png'); */
   background-size: cover;
   background-position: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.start{
+  opacity:0;
+}
+.end{
+  opacity:1;
+  transition: opacity 0.5s;
 }
 
 .App {
@@ -40,6 +52,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
