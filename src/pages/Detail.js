@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { order, stockIncrease } from '../store/stockSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { Nav } from 'react-bootstrap';
 import { Context1 } from '../App';
 // import styled from 'styled-components';
@@ -58,6 +60,11 @@ function Detail(props) {
     (data) => data.id == id
   );
 
+  const stock = useSelector((state) => state.stock);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  console.log(stock)
+
 
   return (
     <div className={`container start ${fade2}`}>
@@ -87,7 +94,17 @@ function Detail(props) {
               : <p>숫자만입력가능합니다</p>
           }
           <input type="text" onChange={(e) => setMany(e.target.value)} />
-          <button className="btn btn-danger">주문하기</button>
+          <button className="btn btn-danger" onClick={() => {
+            let double = stock.find((data)=>data.id == item[0].id)
+            if(!double){
+              dispatch(order(
+                { id: item[0].id, name: item[0].title, count: 1 }
+              ))
+            }else{
+              dispatch(stockIncrease(item[0].id))
+            }
+            navigate('/cart')
+          }}>주문하기</button>
           {/* <Btn color='red'></Btn> */}
         </div>
       </div>
