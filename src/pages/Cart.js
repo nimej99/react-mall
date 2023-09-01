@@ -4,13 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userIncrease } from '../store/userSlice';
 import { stockIncrease, pop } from '../store/stockSlice';
 
+
 function Cart(props) {
 
   let user = useSelector((state) => state.user);
   let stock = useSelector((state) => state.stock);
   let dispatch = useDispatch();
-
-  console.log(stock);
 
   return (
     <>
@@ -39,7 +38,7 @@ function Cart(props) {
               <td><button onClick={() => {
                 dispatch(stockIncrease(data.id))
               }}>+</button></td>
-              <td><button onClick={()=>{
+              <td><button onClick={() => {
                 dispatch(pop(data.id))
               }}>삭제</button></td>
             </tr>

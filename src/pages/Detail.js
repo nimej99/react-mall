@@ -14,18 +14,26 @@ import { Context1 } from '../App';
 
 function Detail(props) {
 
+  useEffect(()=>{
+    let duplication = localStorage.getItem('watched');
+    duplication = JSON.parse(duplication)
+    duplication.unshift(item[0].id)
+    //기존 배열 -> set 자료형(중복제거) -> 다시 배열
+    duplication = new Set(duplication)
+    duplication = Array.from(duplication)
+    localStorage.setItem('watched', JSON.stringify(duplication))
+  }, [])
+
   useEffect(() => {
+    // automatic batching state변경함수가 연달아 있으면 마지막 함수만 실행.
     let timer = setTimeout(() => {
       setCount(true);
     }, 2000)
     setFade2('end');
 
-    //서버 데이터요청 중 재렌더링시
-
     //cleanup function이 제일 먼저 실행됨, unmount시 실행
     return () => {
       clearTimeout(timer);
-      //기존 데이터요청은 제거하라.
       setFade2('');
     }
   }, [])
@@ -46,12 +54,9 @@ function Detail(props) {
       setAlert(false);
     }, 2000)
 
-    //서버 데이터요청 중 재렌더링시
-
     //cleanup function이 제일 먼저 실행됨, unmount시 실행
     return () => {
       clearTimeout(timer);
-      //기존 데이터요청은 제거하라.
     }
   }, [many])
 
@@ -63,7 +68,6 @@ function Detail(props) {
   const stock = useSelector((state) => state.stock);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(stock)
 
 
   return (
@@ -95,14 +99,12 @@ function Detail(props) {
           }
           <input type="text" onChange={(e) => setMany(e.target.value)} />
           <button className="btn btn-danger" onClick={() => {
-            let double = stock.find((data)=>data.id == item[0].id)
-            if(!double){
-              dispatch(order(
-                { id: item[0].id, name: item[0].title, count: 1 }
-              ))
-            }else{
-              dispatch(stockIncrease(item[0].id))
-            }
+            let duplication = stock.find((data)=>data.id == item[0].id)
+            !duplication
+            ? dispatch(order(
+              { id: item[0].id, name: item[0].title, count: 1 }
+            ))
+            : dispatch(stockIncrease(item[0].id));
             navigate('/cart')
           }}>주문하기</button>
           {/* <Btn color='red'></Btn> */}
